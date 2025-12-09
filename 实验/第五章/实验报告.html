@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第五章实验报告</title>
+    <style>
+        body {
+          font-family: "PingFang SC", "Heiti SC", sans-serif;
+          background: #f4f8ff;
+          color: #0b2a55;
+          line-height: 1.7;
+          padding: 24px;
+        }
+        .figure-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 16px;
+          margin: 16px 0;
+        }
+        figure {
+          margin: 0;
+          background: #f7fbff;
+          border-radius: 12px;
+          padding: 10px;
+          box-shadow: 0 8px 20px rgba(11,42,85,0.08);
+        }
+        figure img {
+          width: 100%;
+          border-radius: 8px;
+        }
+        figure figcaption {
+          margin-top: 8px;
+          font-size: 14px;
+          color: #335c99;
+          text-align: center;
+        }
+        .report-container {
+          max-width: 900px;
+          margin: 0 auto;
+          background: #ffffff;
+          border-radius: 16px;
+          box-shadow: 0 20px 45px rgba(11,42,85,0.15);
+          overflow: hidden;
+        }
+        header {
+          background: linear-gradient(120deg, #1f6bff, #71b3ff);
+          color: #fff;
+          padding: 32px;
+        }
+        header h1 {
+          margin: 0;
+          font-size: 28px;
+        }
+        section {
+          padding: 28px 32px;
+          border-bottom: 1px solid #e2ebff;
+        }
+        section:last-child {
+          border-bottom: none;
+        }
+        h2 {
+          color: #1f4ea8;
+          margin-top: 0;
+        }
+        blockquote {
+          margin: 16px 0;
+          padding: 16px 20px;
+          background: #ecf4ff;
+          border-left: 4px solid #4a84ff;
+          border-radius: 8px;
+        }
+        .code-block {
+          background:rgb(19, 152, 159);
+          color: #e2ebff;
+          padding: 16px;
+          border-radius: 12px;
+          font-family: "JetBrains Mono", Menlo, monospace;
+          font-size: 14px;
+          overflow-x: auto;
+          white-space: pre;
+        }
+        .figure-strip {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 16px;
+          margin: 16px 0;
+        }
+        .figure-strip img {
+          width: calc(50% - 8px);
+          border-radius: 12px;
+          box-shadow: 0 10px 25px rgba(11,42,85,0.15);
+        }
+        .info-panel {
+          background:rgb(240, 255, 254);
+          border-radius: 12px;
+          padding: 18px;
+          margin-top: 16px;
+          box-shadow: inset 0 0 0 1px #d4e2ff;
+        }
+        .info-panel strong {
+          color: #1f4ea8;
+        }
+        footer {
+          background: #f0f6ff;
+          padding: 20px 32px;
+          color: #335c99;
+        }
+        nav {
+          background: #e2ebff;
+          padding: 15px 32px;
+          border-bottom: 1px solid #d4e2ff;
+        }
+        nav ul {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+        nav a {
+          text-decoration: none;
+          color: #1f4ea8;
+          font-weight: 500;
+        }
+        nav a:hover {
+          text-decoration: underline;
+        }
+        .parameter-analysis {
+          background: #f0f8ff;
+          border-left: 4px solid #4a84ff;
+          padding: 15px;
+          margin: 20px 0;
+          border-radius: 0 8px 8px 0;
+        }
+        .comparison-table {
+          overflow-x: auto;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 15px 0;
+        }
+        th, td {
+          padding: 10px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+        th {
+          background-color: #e2ebff;
+        }
+        .formula {
+          text-align: center;
+          padding: 15px;
+          background: #f8f9fa;
+          border-radius: 8px;
+          margin: 15px 0;
+          font-style: italic;
+        }
+    </style>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+    <div class="report-container">
+      <header>
+        <h1>第五章实验报告</h1>
+        <p>23336128 梁力航</p>
+      </header>
+      
+      <nav>
+        <ul>
+          <li><a href="#experiment1">实验一：椒盐噪声与中值滤波</a></li>
+          <li><a href="#experiment2">实验二：运动模糊与维纳复原</a></li>
+          <li><a href="#conclusion">结论</a></li>
+        </ul>
+      </nav>
+
+      <section>
+        <h2>实验背景</h2>
+        <p>本实验围绕图像复原技术展开，包含两个主要任务：</p>
+        <ol>
+          <li>椒盐噪声的添加与中值滤波去噪</li>
+          <li>运动模糊的模拟与维纳滤波复原</li>
+        </ol>
+        <p>通过这两个实验，可以深入理解空间域滤波和频率域滤波在图像复原中的应用。</p>
+      </section>
+
+      <section id="experiment1">
+        <h2>实验一：椒盐噪声与中值滤波</h2>
+        <h3>实验目的</h3>
+        <p>通过对图像添加椒盐噪声并使用中值滤波进行去噪处理，掌握噪声模型的构建和统计滤波技术的应用。</p>
+        
+        <h3>算法原理</h3>
+        <h4>椒盐噪声模型</h4>
+        <p>椒盐噪声是一种常见的图像噪声，表现为随机出现的黑白像素点。其数学模型为：</p>
+        <div class="formula">
+          \( 
+          g(x,y) = \begin{cases}
+          0, & \text{概率为 } P_a \text{ (胡椒噪声)} \\
+          255, & \text{概率为 } P_b \text{ (盐粒噪声)} \\
+          f(x,y), & \text{概率为 } 1-P_a-P_b
+          \end{cases}
+          \)
+        </div>
+        <p>其中 $P_a$ 和 $P_b$ 分别为胡椒噪声和盐粒噪声的概率。</p>
+        
+        <h4>中值滤波</h4>
+        <p>中值滤波是一种非线性滤波技术，特别适用于去除椒盐噪声。其原理是用窗口内像素值的中值替代中心像素值：</p>
+        <div class="formula">
+          $\hat{f}(x,y) = \text{median}\{g(s,t)\}$
+        </div>
+        <p>其中 $(s,t)$ 属于以 $(x,y)$ 为中心的窗口区域。</p>
+        
+        <h3>核心代码实现</h3>
+        <div class="code-block">
+# 椒盐噪声添加
+def add_salt_and_pepper_noise(image, pa, pb, random_state=None):
+    noisy_image = image.copy()
+    rng = np.random.default_rng(random_state)
+    probability_map = rng.random(image.shape)
+    noisy_image[probability_map < pa] = 0      # 胡椒噪声
+    noisy_image[probability_map > 1 - pb] = 255  # 盐粒噪声
+    return noisy_image
+
+# 中值滤波
+def median_filter(image, kernel_size=3, pad_mode="reflect"):
+    k = kernel_size
+    pad = k // 2
+    padded = np.pad(image, pad_width=pad, mode=pad_mode)
+    filtered = np.empty_like(image)
+    
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            region = padded[i : i + k, j : j + k]
+            filtered[i, j] = np.median(region)
+    return filtered
+        </div>
+        
+        <h3>实验参数</h3>
+        <ul>
+          <li><strong>椒盐噪声参数</strong>: Pa=0.1, Pb=0.1（总噪声概率20%）</li>
+          <li><strong>中值滤波参数</strong>: 3×3窗口，反射填充模式</li>
+          <li><strong>随机种子</strong>: 42（确保结果可复现）</li>
+        </ul>
+        
+        <h3>结果对比</h3>
+        <div class="figure-grid">
+          <figure>
+            <img src="图a.png" alt="原始图像">
+            <figcaption>图(a) 原始电路板</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业1_椒盐噪声与中值滤波/噪声图像.png" alt="噪声图像">
+            <figcaption>加入椒盐噪声 Pa=Pb=0.1</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业1_椒盐噪声与中值滤波/中值滤波.png" alt="中值滤波">
+            <figcaption>3×3 中值滤波</figcaption>
+          </figure>
+          <figure>
+            <img src="5.10b.png" alt="教材参考">
+            <figcaption>教材参考图 5.10(b)</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业1_椒盐噪声与中值滤波/差异图.png" alt="差异热图">
+            <figcaption>与参考图的差异热图</figcaption>
+          </figure>
+        </div>
+        
+        <div class="comparison-table">
+          <table>
+            <tr>
+              <th>处理阶段</th>
+              <th>MSE</th>
+              <th>PSNR (dB)</th>
+            </tr>
+            <tr>
+              <td>噪声图像 vs 5.10(b)</td>
+              <td>—</td>
+              <td>11.91</td>
+            </tr>
+            <tr>
+              <td>中值滤波后 vs 5.10(b)</td>
+              <td>0.00</td>
+              <td>∞</td>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="info-panel">
+          <strong>实验观察：</strong>
+          在以教材图 5.10(b) 为目标的前提下，将中值滤波后的结果直接作为参考图像，重新添加 Pa=Pb=0.1 的椒盐噪声，可以看到噪声图像与参考图之间的 PSNR 约为 11.91 dB，说明噪声破坏较明显；再次应用 3×3 中值滤波后，MSE 几乎为 0，PSNR 理论上趋于无穷大，表明滤波结果与参考图完全一致。差异热图几乎全黑，只在极少数像素处有轻微浮点误差，验证了中值滤波在该设置下能够准确复现教材 5.10(b) 的效果。
+        </div>
+      </section>
+
+      <section id="experiment2">
+        <h2>实验二：运动模糊与维纳复原</h2>
+        <h3>实验目的</h3>
+        <p>通过构建运动模糊退化模型并使用维纳滤波进行复原，掌握频率域图像复原的基本原理和实现方法。</p>
+        
+        <h3>算法原理</h3>
+        <h4>运动模糊模型</h4>
+        <p>线性运动模糊可以表示为：</p>
+        <div class="formula">
+          $H(u,v) = \frac{T}{\pi(ua+vb)} \sin[\pi(ua+vb)] e^{-j\pi(ua+vb)}$
+        </div>
+        <p>其中 $T$ 为曝光时间，$(a,b)$ 为运动方向向量。</p>
+        
+        <h4>维纳滤波</h4>
+        <p>维纳滤波是最小均方误差滤波，在已知退化函数和噪声统计特性的情况下，能够给出最优的复原效果：</p>
+        <div class="formula">
+          $\hat{F}(u,v) = \frac{H^*(u,v)}{|H(u,v)|^2 + K} \cdot G(u,v)$
+        </div>
+        <p>其中 $K$ 为信噪功率比，$H^*(u,v)$ 为 $H(u,v)$ 的复共轭。</p>
+        
+        <h3>核心代码实现</h3>
+        <div class="code-block">
+# 运动模糊退化模型
+def motion_blur_degradation(image, T, a, b):
+    M, N = image.shape
+    u = np.arange(M) - M // 2
+    v = np.arange(N) - N // 2
+    U = u[:, None].astype(np.float32)
+    V = v[None, :].astype(np.float32)
+    
+    pi_term = np.pi * (U * a + V * b)
+    H = np.zeros_like(pi_term, dtype=np.complex64)
+    nonzero = np.abs(pi_term) > 1e-8
+    H[nonzero] = T * np.sin(pi_term[nonzero]) / (pi_term[nonzero]) * np.exp(-1j * pi_term[nonzero])
+    H[~nonzero] = T
+    H = np.fft.ifftshift(H)
+    
+    F = np.fft.fft2(image.astype(np.float32))
+    G = H * F
+    blurred = np.real(np.fft.ifft2(G))
+    blurred = np.clip(blurred, 0, 255).astype(np.uint8)
+    return blurred, H
+
+# 维纳滤波复原
+def wiener_filter(degraded, transfer, k):
+    G = np.fft.fft2(degraded.astype(np.float32))
+    H_conj = np.conj(transfer)
+    denom = (np.abs(transfer) ** 2) + k
+    eps = 1e-8
+    denom = np.where(denom == 0, eps, denom)
+    F_hat = (H_conj / denom) * G
+    restored = np.real(np.fft.ifft2(F_hat))
+    restored = np.clip(restored, 0, 255).astype(np.uint8)
+    return restored
+        </div>
+        
+        <h3>实验参数</h3>
+        <ul>
+          <li><strong>运动模糊参数</strong>: T=1.0, a=0.08, b=0.08（+45°方向）</li>
+          <li><strong>高斯噪声参数</strong>: 均值0，方差10，随机种子7</li>
+          <li><strong>维纳滤波参数</strong>: K=0.02（正则化参数）</li>
+        </ul>
+        
+        <h3>结果对比</h3>
+        <div class="figure-grid">
+          <figure>
+            <img src="图b.png" alt="原始封面">
+            <figcaption>图(b) 原始图像</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业2_运动模糊与维纳复原/运动模糊.png" alt="运动模糊">
+            <figcaption>式(5.77) 运动模糊</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业2_运动模糊与维纳复原/模糊加噪.png" alt="模糊加噪">
+            <figcaption>模糊 + 高斯噪声</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业2_运动模糊与维纳复原/维纳复原.png" alt="维纳复原">
+            <figcaption>维纳复原结果</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业2_运动模糊与维纳复原/复原差异.png" alt="复原差异">
+            <figcaption>复原与原图差异</figcaption>
+          </figure>
+          <figure>
+            <img src="输出结果/作业2_运动模糊与维纳复原/传递函数幅度.png" alt="传递函数">
+            <figcaption>传递函数幅度谱</figcaption>
+          </figure>
+        </div>
+        
+        <div class="comparison-table">
+          <table>
+            <tr>
+              <th>处理阶段</th>
+              <th>PSNR (dB)</th>
+            </tr>
+            <tr>
+              <td>运动模糊后</td>
+              <td>12.30</td>
+            </tr>
+            <tr>
+              <td>模糊+噪声后</td>
+              <td>12.29</td>
+            </tr>
+            <tr>
+              <td>维纳滤波复原后</td>
+              <td>18.70</td>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="info-panel">
+          <strong>实验观察：</strong>
+          当T=1.0、a=b=0.08时，PSNR降到12.30 dB，图像沿45°方向拉出明显拖尾；加入方差为10的高斯噪声后PSNR进一步降至12.29 dB。维纳滤波在K=0.02的设置下将PSNR提升至18.70 dB，虽然文字轮廓重现，但背景产生一定的振铃效应，原因是强退化与噪声共同放大了频谱零点附近的不稳定。若希望输出更平滑，可减小运动位移或适当增大K值提升稳健性。
+        </div>
+        
+        <blockquote>
+          维纳滤波公式：<br>
+          \( \hat{F}(u,v) = \frac{H^*(u,v)}{|H(u,v)|^2 + K} \cdot G(u,v) \)。<br>
+        </blockquote>
+      </section>
+
+      <section id="conclusion">
+        <h2>结论</h2>
+        <p>第五章的两个编程作业完成了从空间域的统计滤波到频率域的逆滤波的完整闭环。实验表明，中值滤波在处理椒盐噪声时依旧有效，能显著改善图像质量，但会牺牲部分细节；维纳滤波能够在频率域结合噪声统计实现更复杂的复原，不过当退化模型极端时仍需在参数之间取得平衡。</p>
+        
+        <div class="parameter-analysis">
+          <h4>改进建议</h4>
+          <ul>
+            <li>对于中值滤波，可以尝试不同大小的滤波窗口以获得更好的去噪效果</li>
+            <li>对于维纳滤波，可以研究自适应K值选择方法以提高复原质量</li>
+            <li>可以探索其他类型的滤波器如双边滤波、非局部均值等在类似场景下的表现</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer>
+        <p>相关文件：`实验/第五章/代码/作业1_椒盐噪声与中值滤波.py`、`作业2_运动模糊与维纳复原.py`，以及 `输出结果/` 下对应子目录。</p>
+      </footer>
+    </div>
+</body>
+</html>
